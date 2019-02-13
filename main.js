@@ -1,16 +1,11 @@
-const { app, BrowserWindow, globalShortcut, ipcMain, Menu, MenuItem, Notification, Tray } = require('electron')
-const DiscordRPC = require('discord-rpc')
+const { app, BrowserWindow, globalShortcut, Menu, MenuItem, Tray } = require('electron')
 const path = require('path')
 const fs = require('fs')
 require('dotenv').config()
+const shorcutReigster = require('./shortcutRegister')
+const discordRPC = require('./discordRPC')
 
 let mainWindow
-
-const clientId = '544286545440669734'
-
-DiscordRPC.register(clientId)
-
-const rpc = new DiscordRPC.Client({ transport: 'ipc' })
 
 const menu = new Menu()
 
@@ -50,45 +45,9 @@ function createWindow () {
   })
 }
 
-async function setActivity (state, details) {
-  if (!rpc || !mainWindow) {
-    return
-  }
-
-  const startTimestamp = new Date()
-
-  rpc.setActivity({
-    details: details,
-    state: state,
-    startTimestamp,
-    largeImageKey: 'default-icon',
-    largeImageText: 'App Running',
-    smallImageKey: (state === 'In song') ? 'play-button' : 'default-icon',
-    smallImageText: 'App Running',
-    instance: false
-  })
-}
-
-rpc.on('ready', () => {
-  setActivity('Idle', 'Nothing Playing')
-})
-
-rpc.login({ clientId }).catch(console.error)
-
 app.on('ready', () => {
-  globalShortcut.register('MediaNextTrack', () => {
-    mainWindow.webContents.executeJavaScript('window.skip()')
-  })
-  globalShortcut.register('MediaPreviousTrack', () => {
-    mainWindow.webContents.executeJavaScript('window.rewind()')
-  })
-  globalShortcut.register('MediaStop', () => {
-    mainWindow.webContents.executeJavaScript('window.playPause()')
-  })
-  globalShortcut.register('MediaPlayPause', () => {
-    mainWindow.webContents.executeJavaScript('window.playPause()')
-  })
-  
+  shorcutReigster(mainWindow)
+  discordRPC()
   const fileMenu = new Menu()
   fileMenu.append(new MenuItem({
     label: 'Play/Pause',
@@ -155,14 +114,4 @@ app.on('activate', function () {
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll()
-})
-
-ipcMain.on('rpc-request', function (event, type, arg) {
-  let title = arg.replace(' - Google Play Music', '')
-  let titleSplit = title.split('-')
-  if (titleSplit.length > 1) {
-    setActivity('In song', title)
-    let notification = new Notification({ title: 'Alaun', body: title, silent: true })
-    notification.show()
-  } else setActivity('In menu')
 })
