@@ -3,11 +3,11 @@ A simple Google Play Music standalone app with Discord integration
 
 When not playing:
 
-![discordrpc](./screenshots/discordrpc.PNG)
+![discordrpc](./screenshots/discordrpc.png)
 
 When playing a song:
 
-![discordrpc2](./screenshots/discordrpcplaying.PNG)
+![discordrpc2](./screenshots/discordrpcplaying.png)
 
 
 ## Installation
