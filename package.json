@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/afroraydude/coffeed",
+  "repository": "https://github.com/afroraydude/alaun",
   "keywords": [
     "Electron",
     "Google",
@@ -17,9 +17,17 @@
   "author": "GitHub",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^4.0.3"
+    "electron": "^4.0.3",
+    "electron-builder": "^20.38.5"
   },
   "dependencies": {
-    "discord-rpc": "^3.0.1"
+    "discord-rpc": "^3.0.1",
+    "dotenv": "^6.2.0"
+  },
+  "build": {
+    "appId": "com.afroraydude.alaun",
+    "productName": "Alaun",
+    "copyright": "Copyright © 2019 afroraydude",
+    "files": ["**/*", "build/icon.*"]
   }
 }
