@@ -23,6 +23,12 @@ function createWindow () {
     }
   })
 
+  mainWindow.loadURL('http://play.google.com/music/listen')
+
+  if (process.env.isDev) mainWindow.webContents.openDevTools()
+
+  playerIsShowing = true
+
   mainWindow.on('close', (e) => {
     console.log(playerIsQuiting)
     if (playerIsQuiting) {
@@ -32,12 +38,6 @@ function createWindow () {
       playerIsShowing = false
     }
   })
-
-  mainWindow.loadURL('http://play.google.com/music/listen')
-
-  if (process.env.isDev) mainWindow.webContents.openDevTools()
-
-  playerIsShowing = true
 
   mainWindow.on('closed', () => {
     mainWindow = null
