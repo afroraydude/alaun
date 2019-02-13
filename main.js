@@ -22,20 +22,17 @@ function createWindow () {
       contextIsolation: false
     }
   })
-  mainWindow.on('close', (event) => {
-    mainWindow.hide()
-    playerIsShowing = false
-    event.returnValue = playerIsQuiting
+
+  mainWindow.on('close', (e) => {
+    console.log(playerIsQuiting)
+    if (playerIsQuiting) {
+      e.returnValue = playerIsQuiting
+    } else {
+      mainWindow.hide()
+      playerIsShowing = false
+    }
   })
 
-  /**
-  mainWindow.onbeforeunload = (e) => {
-    mainWindow.hide()
-    playerIsShowing = false
-    e.returnValue = playerIsQuiting
-  }
-  */
- 
   mainWindow.loadURL('http://play.google.com/music/listen')
 
   if (process.env.isDev) mainWindow.webContents.openDevTools()
@@ -53,6 +50,7 @@ function createWindow () {
 }
 
 app.on('ready', () => {
+  createWindow()
   const fileMenu = new Menu()
   fileMenu.append(new MenuItem({
     label: 'Play/Pause',
@@ -89,6 +87,7 @@ app.on('ready', () => {
     accelerator: 'CmdOrCtrl+Q',
     click: () => {
       playerIsQuiting = true
+      mainWindow.close()
       app.quit()
     }
   }))
@@ -100,9 +99,7 @@ app.on('ready', () => {
   let trayIcon = path.join(__dirname, 'icon.tray.png')
   let tray = new Tray(trayIcon)
   tray.setContextMenu(fileMenu)
-
   Menu.setApplicationMenu(menu)
-  createWindow()
   shorcutReigster(mainWindow)
   discordRPC()
 })
