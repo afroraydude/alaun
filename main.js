@@ -14,6 +14,9 @@ const rpc = new DiscordRPC.Client({ transport: 'ipc' })
 
 const menu = new Menu()
 
+let playerIsShowing = false
+let playerIsQuiting = false
+
 function createWindow () {
   mainWindow = new BrowserWindow({ width: 1280,
     height: 720,
@@ -27,9 +30,17 @@ function createWindow () {
 
   mainWindow.loadURL('http://play.google.com/music/listen')
 
-  mainWindow.webContents.openDevTools()
+  if (process.env.isDev) mainWindow.webContents.openDevTools()
+
+  playerIsShowing = true
+
+  mainWindow.on('close', (event) => {
+    mainWindow.hide()
+    playerIsShowing = false
+    event.returnValue = playerIsQuiting
+  })
   
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', () => {
     mainWindow = null
   })
 
@@ -52,7 +63,7 @@ async function setActivity (state, details) {
     startTimestamp,
     largeImageKey: 'default-icon',
     largeImageText: 'App Running',
-    smallImageKey: 'default-icon',
+    smallImageKey: (state === 'In song') ? 'play-button' : 'default-icon',
     smallImageText: 'App Running',
     instance: false
   })
@@ -99,6 +110,22 @@ app.on('ready', () => {
     accelerator: 'MediaPreviousTrack',
     click: () => {
       mainWindow.webContents.executeJavaScript('window.rewind()')
+    }
+  }))
+  fileMenu.append(new MenuItem({
+    label: 'Toggle Player Window',
+    click: () => {
+      if (playerIsShowing) mainWindow.hide()
+      else mainWindow.show()
+      playerIsShowing = !playerIsShowing
+    }
+  }))
+  fileMenu.append(new MenuItem({
+    label: 'Close',
+    accelerator: 'CmdOrCtrl+Q',
+    click: () => {
+      playerIsQuiting = true
+      app.quit()
     }
   }))
   menu.append(new MenuItem({

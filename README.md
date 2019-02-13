@@ -1,11 +1,8 @@
 # Alaun
-
 A simple Google Play Music standalone app with Discord integration
 
 
 ## Building
-
-
 Windows:
 ```powershell
 $env:ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES = 'true'
@@ -20,3 +17,6 @@ export ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true
 
 electron-builder --win
 ```
+
+## Credits
+Play button icon made by Appzgear
