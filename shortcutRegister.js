@@ -1,5 +1,7 @@
+// Import required scripts
 const { globalShortcut } = require('electron')
 
+// Create global shortcuts for use when app is not focused
 const registerShortcuts = (mainWindow) => {
   globalShortcut.register('MediaNextTrack', () => {
     mainWindow.webContents.executeJavaScript('window.skip()')
