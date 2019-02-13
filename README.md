@@ -1,8 +1,29 @@
 # Alaun
 A simple Google Play Music standalone app with Discord integration
 
+When not playing:
 
-## Building
+![discordrpc](./screenshots/discordrpc.PNG)
+
+When playing a song:
+
+![discordrpc2](./screenshots/discordrpcplaying.PNG)
+
+
+## Installation
+
+### Via Git
+```bash
+git clone https://github.com/afroraydude/alaun
+
+cd alaun
+
+npm install
+
+npm start
+```
+
+## Building to executable
 Windows:
 ```powershell
 $env:ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES = 'true'
@@ -15,7 +36,7 @@ Linux:
 #!/bin/bash
 export ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true
 
-electron-builder --win
+electron-builder -l
 ```
 
 ## Credits

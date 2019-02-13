@@ -22,39 +22,44 @@ function createWindow () {
       contextIsolation: false
     }
   })
+  mainWindow.on('close', (event) => {
+    mainWindow.hide()
+    playerIsShowing = false
+    event.returnValue = playerIsQuiting
+  })
 
+  /**
+  mainWindow.onbeforeunload = (e) => {
+    mainWindow.hide()
+    playerIsShowing = false
+    e.returnValue = playerIsQuiting
+  }
+  */
+ 
   mainWindow.loadURL('http://play.google.com/music/listen')
 
   if (process.env.isDev) mainWindow.webContents.openDevTools()
 
   playerIsShowing = true
 
-  mainWindow.on('close', (event) => {
-    mainWindow.hide()
-    playerIsShowing = false
-    event.returnValue = playerIsQuiting
-  })
-  
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
   mainWindow.webContents.once('dom-ready', () => {
-    const inject = fs.readFileSync(path.join(__dirname, 'inject.js'), {encoding: 'utf8'})
+    const inject = fs.readFileSync(path.join(__dirname, 'inject.js'), { encoding: 'utf8' })
     mainWindow.webContents.executeJavaScript(inject)
   })
 }
 
 app.on('ready', () => {
-  shorcutReigster(mainWindow)
-  discordRPC()
   const fileMenu = new Menu()
   fileMenu.append(new MenuItem({
     label: 'Play/Pause',
     accelerator: 'MediaPlayPause',
-    click: () => { 
+    click: () => {
       console.log('MediaPlayPause')
-      mainWindow.webContents.executeJavaScript('window.playPause()') 
+      mainWindow.webContents.executeJavaScript('window.playPause()')
     }
   }))
   fileMenu.append(new MenuItem({
@@ -98,6 +103,8 @@ app.on('ready', () => {
 
   Menu.setApplicationMenu(menu)
   createWindow()
+  shorcutReigster(mainWindow)
+  discordRPC()
 })
 
 app.on('window-all-closed', function () {
